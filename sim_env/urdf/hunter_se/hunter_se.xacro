@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="hunter_se">
+    <xacro:include filename="$(find sim_env)/urdf/hunter_se/hunter_se_description.xacro" />
+    <!-- <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/> -->
+    <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+
+
+    <xacro:arg name="robot_namespace" default="$(optenv ROBOT_NAMESPACE /)" />
+
+    <xacro:property name="tf_prefix" value="$(arg robot_namespace)/" />
+ 
+
+<!-- 
+    <link
+      name="bracket1">
+    <inertial>
+      <origin
+        xyz="0.0243785684298659 0.0218319065805874 0.0624928450634232"
+        rpy="0 0 0" />
+      <mass
+        value="5.08720310967178" />
+      <inertia
+        ixx="0.0246618092316458"
+        ixy="1.16398032242549E-06"
+        ixz="2.01131906129506E-06"
+        iyy="0.0719498281970376"
+        iyz="-1.68017323911746E-06"
+        izz="0.0904939807842063" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/bracket1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/bracket1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bracket1_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0433497650389506 -9.31526601490829E-05 0.0319999999993372"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="bracket1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="bracket2">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="4.4741259701151" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.001" radius="0.005"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+       <cylinder length="0.001" radius="0.005"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bracket2_joint"
+    type="fixed">
+    <origin
+      xyz="0.313486488502949 -0.000324527621145904 0.03200000000479"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="bracket2" />
+    <axis
+      xyz="0 0 0" />
+  </joint> -->
+  <link
+    name="radar_mid360">
+    <inertial>
+      <origin
+        xyz="-0.000199594660369895 -6.37319738762152E-06 -0.00388538535330896"
+        rpy="0 0 0" />
+      <mass
+        value="0.141887302549175" />
+      <inertia
+        ixx="4.17978898457316E-05"
+        ixy="-5.59194490448942E-09"
+        ixz="3.05332668997504E-07"
+        iyy="4.50771641352415E-05"
+        iyz="-4.01246398655249E-10"
+        izz="6.87998228301584E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <!-- <geometry>
+        <mesh filename="package://sim_env/meshes/hunter_se/radar_mid360.STL" />
+      </geometry> -->
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <!-- <geometry>
+        <mesh filename="package://sim_env/meshes/hunter_se/radar_mid360.STL" />
+      </geometry> -->
+    </collision>
+  </link>
+  
+  <joint
+    name="radar_mid360_joint"
+    type="fixed">
+    <origin
+      xyz="0.366131859680309 0 0.52448135397648"
+      rpy="0 0.59374966669549 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="radar_mid360" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+<gazebo reference="radar_mid360">
+    <sensor name="radar_mid360" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>True</visualize>
+      <update_rate>10</update_rate>
+      <!-- This ray plgin is only for visualization. -->
+      <plugin filename="liblivox_laser_simulation.so" name="gazebo_ros_laser_controller">
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>100</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>6.28318</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.12601266555555554</min_angle>
+              <max_angle>0.9637699988888888</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>200.0</max>
+            <resolution>0.002</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <visualize>True</visualize>
+        <samples>24000</samples>
+        <downsample>1</downsample>
+        <csv_file_name>package://livox_laser_simulation/scan_mode/mid360.csv</csv_file_name>
+        <ros_topic>pointcloud</ros_topic>
+        <frameName>radar_mid360</frameName>
+
+      </plugin>
+    </sensor>
+  </gazebo>
+  
+
+  <!-- 
+  <link
+    name="camera_d435">
+    <inertial>
+      <origin
+        xyz="0.00170497908334968 0.000136107411475184 -0.0114440207055423"
+        rpy="0 0 0" />
+      <mass
+        value="0.107910437623982" />
+      <inertia
+        ixx="7.71002134032789E-06"
+        ixy="2.480447437639E-10"
+        ixz="1.78479822471424E-08"
+        iyy="7.02567412580143E-05"
+        iyz="-4.92987187683606E-08"
+        izz="7.12550296720178E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/camera_d435.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/camera_d435.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="camera_d435_joint"
+    type="fixed">
+    <origin
+      xyz="0.389581945751229 0.00171624697933143 0.441500000005952"
+      rpy="-1.57079632677962 0 -1.5707963267949" />
+
+    <parent
+      link="base_link" />
+    <child
+      link="camera_d435" />
+    <axis
+      xyz="0 0 0" />
+  </joint> -->
+  <xacro:realsense_d435 sensor_name="d435" parent_link="base_link" rate="10">
+    <origin rpy="0 0 0 " xyz="0.38 0 0.43"/>
+  </xacro:realsense_d435>
+
+  <!-- <gazebo reference="camera_d435">
+    <sensor type="camera" name="camera_node">
+      <update_rate>30.0</update_rate> 
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>480</width>
+          <height>640</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="gazebo_camera" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>/camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_d435</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo> -->
+
+
+  <!-- <link
+    name="GPS1">
+    <inertial>
+      <origin
+        xyz="-4.85722573273506E-17 6.66133814775094E-16 0.0153993114850224"
+        rpy="0 0 0" />
+      <mass
+        value="0.152364991944087" />
+      <inertia
+        ixx="6.73661595108641E-05"
+        ixy="1.401826273156E-32"
+        ixz="2.20007690216285E-20"
+        iyy="6.73661595108641E-05"
+        iyz="1.12678763818868E-20"
+        izz="9.95662713444189E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/GPS1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/GPS1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GPS1_joint"
+    type="fixed">
+    <origin
+      xyz="0.314131945752368 0.29500000000034 0.367000000004799"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="GPS1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="GPS2">
+    <inertial>
+      <origin
+        xyz="-8.32667268468867E-17 -7.21644966006352E-16 0.0153993114850222"
+        rpy="0 0 0" />
+      <mass
+        value="0.152364991944087" />
+      <inertia
+        ixx="6.73661595108641E-05"
+        ixy="5.31274850089154E-33"
+        ixz="2.20007690212341E-20"
+        iyy="6.73661595108641E-05"
+        iyz="-1.04685991567142E-20"
+        izz="9.95662713444189E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/GPS2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/GPS2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GPS2_joint"
+    type="fixed">
+    <origin
+      xyz="0.314131945752366 -0.294999999999661 0.367000000004799"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="GPS2" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="fixposition_view">
+    <inertial>
+      <origin
+        xyz="-0.00339568055006879 0.00392699866274311 0.0149486015491029"
+        rpy="0 0 0" />
+      <mass
+        value="0.118074976141795" />
+      <inertia
+        ixx="0.000130002231411386"
+        ixy="1.73846579513148E-06"
+        ixz="-7.00573199352947E-08"
+        iyy="0.000194644170123389"
+        iyz="2.51587472337028E-07"
+        izz="0.000313258547577059" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/fixposition_view.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/fixposition_view.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fixposition_view_joint"
+    type="fixed">
+    <origin
+      xyz="0.352810926680192 -0.00339137452330613 0.297000000005391"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="fixposition_view" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="rs_lidar">
+    <inertial>
+      <origin
+        xyz="0.210356769511938 -0.00794580100149967 0.0344003113901563"
+        rpy="0 0 0" />
+      <mass
+        value="0.182378934961414" />
+      <inertia
+        ixx="0.0601794758038263"
+        ixy="3.64278357398041E-06"
+        ixz="-6.9600082562785E-06"
+        iyy="0.00624313093548069"
+        iyz="-8.57480048192459E-07"
+        izz="0.0604197830314881" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/rs_lidar.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://sim_env/meshes/hunter_se/rs_lidar.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rs_lidar_joint"
+    type="fixed">
+    <origin
+      xyz="0.322328130769883 0.000134437380004334 0.211000000004925"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="rs_lidar" />
+    <axis
+      xyz="0 0 0" />
+  </joint> -->
+  <!-- <gazebo>
+    <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>50.0</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>ground_truth/state</topicName>
+      <gaussianNoise>0.01</gaussianNoise>
+      <frameName>world</frameName>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+    </plugin>
+  </gazebo>  -->
+
+</robot>

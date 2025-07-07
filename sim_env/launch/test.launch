@@ -1,0 +1,35 @@
+<!--
+******************************************************************************************
+*  Copyright (c) 2023 Yang Haodong, All Rights Reserved                                  *
+*                                                                                        *
+*  @brief    Launch gazebo simulation with world and multi robots.                       *
+*  @author   Haodong Yang                                                                *
+*  @version  1.0.1                                                                       *
+*  @date     2022.06.30                                                                  *
+*  @license  GNU General Public License (GPL)                                            *
+****************************************************************************************** 
+-->
+
+<launch>
+  <!-- select the robots, the world and the map -->
+  <arg name="world" default="warehouse" />
+  <arg name="map" default="warehouse" />
+
+  <!-- some other parameters -->
+  <arg name="debug" default="false" />
+  <arg name="gui" default="true" />
+  <arg name="headless" default="false" />
+  <arg name="rviz_file" default="sim_env.rviz" />
+
+  <!-- start Gazebo with a specific world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" unless="$(eval arg('world') == '')">
+    <arg name="world_name" value="$(find sim_env)/worlds/$(arg world).world" />
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="headless" value="$(arg headless)" />
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+  </include>
+
+
+</launch>
